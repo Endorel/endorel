@@ -1,8 +1,9 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
-import { getPagePaths } from './pages';
+import { getPagePaths, NOT_FOUND_PATH } from './pages';
 
-for (const path of getPagePaths()) {
+// The 404 page isn't in the sitemap, so add it explicitly
+for (const path of [...getPagePaths(), NOT_FOUND_PATH]) {
 	test(`${path} has no detectable WCAG 2.2 AA violations`, async ({ page }) => {
 		await page.goto(path);
 		const { violations } = await new AxeBuilder({ page })

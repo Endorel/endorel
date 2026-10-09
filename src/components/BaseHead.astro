@@ -6,11 +6,13 @@ import '../styles/global.css';
 interface Props {
 	title: string;
 	description: string;
+	/** Ask search engines not to index the page, and omit the canonical URL */
+	noindex?: boolean;
 }
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 
-const { title, description } = Astro.props;
+const { title, description, noindex = false } = Astro.props;
 ---
 
 <!-- Global Metadata -->
@@ -24,7 +26,7 @@ const { title, description } = Astro.props;
 <link rel="preload" href="/fonts/atkinson-bold.woff" as="font" type="font/woff" crossorigin />
 
 <!-- Canonical URL -->
-<link rel="canonical" href={canonicalURL} />
+{noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonicalURL} />}
 
 <!-- Primary Meta Tags -->
 <title>{title}</title>

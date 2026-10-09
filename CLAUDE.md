@@ -19,7 +19,7 @@ Requires Node 22.12+. TypeScript is pinned to 6.x because `@astrojs/check` does 
 - `npm test` — builds the site, then runs the Playwright tests in `tests/` against `astro preview` (Chromium only; first run needs `npx playwright install chromium`)
 - `npx playwright test tests/smoke.spec.ts -g "nav marks"` — run one file or matching tests (needs an existing `dist/`)
 
-The tests read `dist/sitemap-0.xml` to discover every page, so new posts and projects are covered automatically. They check: each page renders with one `<h1>` and the right canonical URL; nav active state; project page content; RSS lists every post (`smoke.spec.ts`); internal links and images resolve (`links.spec.ts`); and no axe WCAG 2.2 AA violations (`a11y.spec.ts`). Blog post bodies must not contain a `# H1` because the layout already renders the title as `<h1>`.
+The tests read `dist/sitemap-0.xml` to discover every page, so new posts and projects are covered automatically. They check: each page renders with one `<h1>` and the right canonical URL; nav active state; project page content; RSS lists every post; unknown paths return 404 with the custom page (`smoke.spec.ts`); internal links and images resolve (`links.spec.ts`); and no axe WCAG 2.2 AA violations (`a11y.spec.ts`). The 404 page (`src/pages/404.astro`) is excluded from the sitemap, so the a11y and link tests add it explicitly via `NOT_FOUND_PATH` in `tests/pages.ts`. Pages that shouldn't be indexed pass `noindex` to `BaseHead`, which emits `<meta name="robots" content="noindex">` instead of a canonical URL. Blog post bodies must not contain a `# H1` because the layout already renders the title as `<h1>`.
 
 ### Astro dev/preview servers start in the background when run by an agent
 

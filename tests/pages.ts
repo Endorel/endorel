@@ -13,3 +13,6 @@ export function getPagePaths(): string[] {
 	}
 	return [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map(([, loc]) => new URL(loc).pathname);
 }
+
+/** A path that doesn't exist, so the server responds with the custom 404 page. */
+export const NOT_FOUND_PATH = '/this-page-does-not-exist/';
