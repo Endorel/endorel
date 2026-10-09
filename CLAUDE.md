@@ -18,6 +18,8 @@ Requires Node 22.12+. TypeScript is pinned to 6.x because `@astrojs/check` does 
 - `npm run format` / `npm run format:check` — Prettier with `prettier-plugin-astro` (tabs, single quotes, width 100; `package.json` uses spaces). `src/content/` is excluded so blog prose isn't reformatted.
 - There is no test suite.
 
+CI (`.github/workflows/ci.yml`) runs `npm ci`, `lint`, `format:check` and `build` on Node 24 for every PR and push to `main`, so run those before pushing.
+
 ## Architecture
 
 - **Content collections**: blog posts live in `src/content/blog/` (`.md`/`.mdx`) and are loaded by a `glob()` loader defined in `src/content.config.ts` (Content Layer API — not the legacy `src/content/config.ts`). Frontmatter is validated by the zod schema there (`title`, `description`, `pubDate` required; `updatedDate`, `heroImage` optional); import `z` from `astro/zod` (Zod 4). Adding a frontmatter field requires updating that schema and the `BlogPost` layout props. Entries are identified by `post.id` (there is no `slug`), and rendered with `render(post)` from `astro:content`.
