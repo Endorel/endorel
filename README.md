@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/Endorel/endorel/actions/workflows/ci.yml/badge.svg)](https://github.com/Endorel/endorel/actions/workflows/ci.yml)
 
-Source for [endorel.se](https://endorel.se), the portfolio and blog of Hélène Francke, fullstack developer.
+Source for [endorel.se](https://endorel.se), the portfolio and blog of Hélène Francke, senior full-stack developer.
 
 ## Stack
 

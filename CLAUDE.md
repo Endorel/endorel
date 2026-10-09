@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Personal portfolio/blog site for Helene Francke, built on Astro 7, starting from the Astro "blog" starter template (based on Bear Blog). Static site output; MDX and sitemap integrations are enabled in `astro.config.mjs`.
+Personal portfolio/blog site for Hélène Francke (senior full-stack developer), built on Astro 7, starting from the Astro "blog" starter template (based on Bear Blog). Static site output; MDX and sitemap integrations are enabled in `astro.config.mjs`.
 
 ## Commands
 

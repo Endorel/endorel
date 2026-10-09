@@ -2,7 +2,7 @@
   "name": "endorel",
   "type": "module",
   "version": "0.0.1",
-  "author": "Helene Francke",
+  "author": "Hélène Francke",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
