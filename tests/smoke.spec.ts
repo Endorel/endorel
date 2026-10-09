@@ -100,3 +100,40 @@ test('unknown paths return 404 with the custom page', async ({ page }) => {
 test('sitemap excludes the 404 page', () => {
 	expect(pagePaths.filter((path) => path.includes('404'))).toEqual([]);
 });
+
+const isBlogPost = (path: string) => /^\/blog\/.+/.test(path);
+
+for (const path of pagePaths) {
+	test(`${path} has OpenGraph tags`, async ({ page, request }) => {
+		await page.goto(path);
+		const og = (property: string) => page.locator(`meta[property="og:${property}"]`);
+
+		await expect(og('site_name')).toHaveAttribute('content', 'Hélène Francke');
+		await expect(og('title')).toHaveAttribute('content', await page.title());
+		await expect(og('description')).toHaveAttribute(
+			'content',
+			(await page.locator('meta[name="description"]').getAttribute('content')) ?? '',
+		);
+		await expect(og('url')).toHaveAttribute('content', `https://endorel.se${path}`);
+		await expect(og('type')).toHaveAttribute('content', isBlogPost(path) ? 'article' : 'website');
+
+		// og:image is optional until a default share image is set, but must work if present
+		if ((await og('image').count()) > 0) {
+			const imageUrl = new URL((await og('image').getAttribute('content')) ?? '');
+			expect(imageUrl.origin).toBe('https://endorel.se');
+			await expect(og('image:alt')).toHaveAttribute('content', /\S/);
+			const response = await request.get(imageUrl.pathname);
+			expect(response.status(), `${imageUrl} (og:image on ${path})`).toBe(200);
+			expect(response.headers()['content-type']).toMatch(/^image\//);
+		}
+	});
+}
+
+test('the 404 page has OpenGraph tags but no og:url', async ({ page }) => {
+	await page.goto(NOT_FOUND_PATH);
+	await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
+		'content',
+		/^Page not found \|/,
+	);
+	await expect(page.locator('meta[property="og:url"]')).toHaveCount(0);
+});
