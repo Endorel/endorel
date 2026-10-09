@@ -14,12 +14,7 @@ const type = Astro.url.pathname.startsWith('/blog/') ? 'article' : 'website';
 
 <html lang="en">
 	<head>
-		<BaseHead
-			title={title}
-			description={description}
-			image={heroImage ? { src: heroImage, alt: title } : undefined}
-			type={type}
-		/>
+		<BaseHead title={title} description={description} type={type} />
 		<style>
 			main {
 				width: calc(100% - 2em);

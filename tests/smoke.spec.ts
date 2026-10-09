@@ -129,14 +129,6 @@ for (const path of pagePaths) {
 	});
 }
 
-test('pages with a hero image use it as the og:image', async ({ page }) => {
-	await page.goto('/blog/first-post/');
-	await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
-		'content',
-		'https://endorel.se/blog-placeholder-3.jpg',
-	);
-});
-
 test('the 404 page has OpenGraph tags but no og:url', async ({ page }) => {
 	await page.goto(NOT_FOUND_PATH);
 	await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(

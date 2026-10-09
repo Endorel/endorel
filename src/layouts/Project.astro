@@ -14,11 +14,7 @@ const { title, description, startDate, endDate, role, tech, repoUrl, liveUrl, he
 
 <html lang="en">
 	<head>
-		<BaseHead
-			title={title}
-			description={description}
-			image={heroImage ? { src: heroImage, alt: title } : undefined}
-		/>
+		<BaseHead title={title} description={description} />
 		<style>
 			main {
 				width: calc(100% - 2em);

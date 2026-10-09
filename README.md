@@ -85,7 +85,7 @@ What the project was, what you did and what came of it.
 
 ### Link preview image
 
-Links to the site show a preview card in LinkedIn, Slack, Teams, messaging apps and email clients, built from OpenGraph tags. Blog posts, projects and the about page use their `heroImage`. Other pages use `DEFAULT_SHARE_IMAGE` in [`src/consts.ts`](src/consts.ts). Add a 1200×630 image to `public/` and set it there, for example `{ src: '/share.jpg', alt: 'Hélène Francke, senior full-stack developer' }`.
+Links to the site show a preview card in LinkedIn, Slack, Teams, messaging apps and email clients, built from OpenGraph tags. Every page uses `DEFAULT_SHARE_IMAGE` from [`src/consts.ts`](src/consts.ts) (a page can override it by passing `image` to `BaseHead`). It's not set yet, so previews have no image. Add a 1200×630 image to `public/` and set it there, for example `{ src: '/share.jpg', alt: 'Hélène Francke, senior full-stack developer' }`.
 
 ## Credit
 
