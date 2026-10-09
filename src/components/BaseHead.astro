@@ -9,8 +9,8 @@ interface Props {
 	description: string;
 	/** Ask search engines not to index the page, and omit the canonical URL */
 	noindex?: boolean;
-	/** Link preview image, a path in public/. Defaults to DEFAULT_SHARE_IMAGE */
-	image?: { src: string; alt: string };
+	/** Link preview image, a path in public/. Defaults to DEFAULT_SHARE_IMAGE; null for none */
+	image?: { src: string; alt: string } | null;
 	/** OpenGraph type: 'article' for blog posts */
 	type?: 'website' | 'article';
 }

@@ -117,7 +117,12 @@ for (const path of pagePaths) {
 		await expect(og('url')).toHaveAttribute('content', `https://endorel.se${path}`);
 		await expect(og('type')).toHaveAttribute('content', isBlogPost(path) ? 'article' : 'website');
 
-		// og:image is optional until a default share image is set, but must work if present
+		// The blog list and posts deliberately have no preview image
+		if (path.startsWith('/blog/')) {
+			await expect(og('image')).toHaveCount(0);
+		}
+
+		// Elsewhere og:image is optional until a default share image is set, but must work if present
 		if ((await og('image').count()) > 0) {
 			const imageUrl = new URL((await og('image').getAttribute('content')) ?? '');
 			expect(imageUrl.origin).toBe('https://endorel.se');

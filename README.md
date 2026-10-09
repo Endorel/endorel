@@ -56,11 +56,22 @@ title: 'Post title'
 description: 'One-sentence summary, used in listings, meta tags and RSS'
 pubDate: '2026-10-09'
 updatedDate: '2026-10-10' # optional
-heroImage: '/my-image.jpg' # optional, from public/
 ---
 
 Start body headings at `##`: the layout renders the title as the page's `<h1>`.
 ```
+
+Posts have no hero image or link preview image, to keep the layout clean. To show an image between paragraphs, put the file next to the post and use Markdown image syntax with a relative path:
+
+```md
+First paragraph.
+
+![Describe what the image shows](./my-post-diagram.png)
+
+Next paragraph.
+```
+
+Astro optimizes these images at build time (WebP, explicit width and height, lazy loading). Always write alt text; the accessibility tests fail without it.
 
 ### Project
 
@@ -85,7 +96,7 @@ What the project was, what you did and what came of it.
 
 ### Link preview image
 
-Links to the site show a preview card in LinkedIn, Slack, Teams, messaging apps and email clients, built from OpenGraph tags. Every page uses `DEFAULT_SHARE_IMAGE` from [`src/consts.ts`](src/consts.ts) (a page can override it by passing `image` to `BaseHead`). It's not set yet, so previews have no image. Add a 1200×630 image to `public/` and set it there, for example `{ src: '/share.jpg', alt: 'Hélène Francke, senior full-stack developer' }`.
+Links to the site show a preview card in LinkedIn, Slack, Teams, messaging apps and email clients, built from OpenGraph tags. Every page outside the blog uses `DEFAULT_SHARE_IMAGE` from [`src/consts.ts`](src/consts.ts) (a page can override it by passing `image` to `BaseHead`). It's not set yet, so previews have no image. Add a 1200×630 image to `public/` and set it there, for example `{ src: '/share.jpg', alt: 'Hélène Francke, senior full-stack developer' }`.
 
 ## Credit
 
