@@ -1,0 +1,36 @@
+# Dependency update PRs. CI (lint, build, Playwright and axe tests) runs on each one.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    labels: [infra]
+    commit-message:
+      prefix: deps
+    groups:
+      # Astro and its integrations are released together
+      astro:
+        patterns: ['astro', '@astrojs/*']
+      lint-and-format:
+        patterns:
+          - 'eslint'
+          - '@eslint/*'
+          - 'eslint-*'
+          - 'typescript-eslint'
+          - 'globals'
+          - 'prettier'
+          - 'prettier-*'
+      testing:
+        patterns: ['@playwright/test', '@axe-core/*']
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    labels: [infra]
+    commit-message:
+      prefix: ci
