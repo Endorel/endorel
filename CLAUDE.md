@@ -16,9 +16,12 @@ Requires Node 22.12+. TypeScript is pinned to 6.x because `@astrojs/check` does 
 - `npx astro check` — type-check only
 - `npm run lint` — ESLint (flat config in `eslint.config.js`: JS + typescript-eslint + eslint-plugin-astro recommended, with `eslint-config-prettier` last)
 - `npm run format` / `npm run format:check` — Prettier with `prettier-plugin-astro` (tabs, single quotes, width 100; `package.json` uses spaces). `src/content/` is excluded so blog prose isn't reformatted.
-- There is no test suite.
+- `npm test` — builds the site, then runs the Playwright tests in `tests/` against `astro preview` (Chromium only; first run needs `npx playwright install chromium`)
+- `npx playwright test tests/smoke.spec.ts -g "nav marks"` — run one file or matching tests (needs an existing `dist/`)
 
-CI (`.github/workflows/ci.yml`) runs `npm ci`, `lint`, `format:check` and `build` on Node 24 for every PR and push to `main`, so run those before pushing.
+The tests read `dist/sitemap-0.xml` to discover every page, so new posts and projects are covered automatically. They check: each page renders with one `<h1>` and the right canonical URL; nav active state; project page content; RSS lists every post (`smoke.spec.ts`); internal links and images resolve (`links.spec.ts`); and no axe WCAG 2.2 AA violations (`a11y.spec.ts`). Blog post bodies must not contain a `# H1` because the layout already renders the title as `<h1>`. The Playwright `webServer` passes `--ignore-lock` to `astro preview`, because Astro 7 otherwise auto-backgrounds the preview server when run by an AI agent and Playwright sees it exit.
+
+CI (`.github/workflows/ci.yml`) runs `npm ci`, `lint`, `format:check`, `build` and the Playwright tests on Node 24 for every PR and push to `main`, so run those before pushing.
 
 ## Architecture
 
