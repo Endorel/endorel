@@ -31,6 +31,8 @@ When Astro 7 detects it is being run by an AI agent (via the `am-i-vibing` packa
 
 CI (`.github/workflows/ci.yml`) runs `npm ci`, `lint`, `format:check`, `build` and the Playwright tests on Node 24 for every PR and push to `main`, so run those before pushing.
 
+Dependabot (`.github/dependabot.yml`) opens weekly update PRs for npm and GitHub Actions, labelled `infra`. npm updates are grouped as `astro` (`astro`, `@astrojs/*`), `lint-and-format` and `testing`; `typescript` is deliberately left ungrouped because it is pinned to 6.x (issue #10).
+
 ## Architecture
 
 - **Content collections**: blog posts live in `src/content/blog/` (`.md`/`.mdx`) and are loaded by a `glob()` loader defined in `src/content.config.ts` (Content Layer API — not the legacy `src/content/config.ts`). Frontmatter is validated by the zod schema there (`title`, `description`, `pubDate` required; `updatedDate`, `heroImage` optional); import `z` from `astro/zod` (Zod 4). Adding a frontmatter field requires updating that schema and the `BlogPost` layout props. Entries are identified by `post.id` (there is no `slug`), and rendered with `render(post)` from `astro:content`.
