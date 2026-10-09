@@ -1,7 +1,8 @@
 import { expect, test } from '@playwright/test';
-import { getPagePaths } from './pages';
+import { getPagePaths, NOT_FOUND_PATH } from './pages';
 
-for (const path of getPagePaths()) {
+// The 404 page isn't in the sitemap, so add it explicitly
+for (const path of [...getPagePaths(), NOT_FOUND_PATH]) {
 	test(`internal links and images on ${path} resolve`, async ({ page, request }) => {
 		await page.goto(path);
 		const urls = await page

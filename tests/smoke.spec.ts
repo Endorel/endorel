@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { getPagePaths } from './pages';
+import { getPagePaths, NOT_FOUND_PATH } from './pages';
 
 const pagePaths = getPagePaths();
 
@@ -80,4 +80,23 @@ test('RSS feed lists every blog post', async ({ request }) => {
 	);
 	const posts = pagePaths.filter((path) => /^\/blog\/.+/.test(path));
 	expect(links.sort()).toEqual(posts.sort());
+});
+
+test('unknown paths return 404 with the custom page', async ({ page }) => {
+	const response = await page.goto(NOT_FOUND_PATH);
+	expect(response?.status()).toBe(404);
+	await expect(page).toHaveTitle(/^Page not found \|/);
+	await expect(page.getByRole('heading', { level: 1 })).toHaveText('Page not found');
+	await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex');
+	await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+	await expect(page.locator('header nav a.active')).toHaveCount(0);
+
+	const suggestions = page.getByRole('navigation', { name: 'Suggested pages' }).getByRole('link');
+	await expect(suggestions).toHaveText(['Home', 'Projects', 'Blog']);
+	await suggestions.getByText('Projects').click();
+	await expect(page).toHaveURL(/\/projects\/$/);
+});
+
+test('sitemap excludes the 404 page', () => {
+	expect(pagePaths.filter((path) => path.includes('404'))).toEqual([]);
 });

@@ -37,6 +37,7 @@ The Playwright tests find every page through the generated sitemap, so new posts
 - internal links and images resolve
 - there are no [axe](https://github.com/dequelabs/axe-core) WCAG 2.2 AA accessibility violations
 - the RSS feed lists every post
+- unknown URLs return a 404 status with the custom 404 page
 
 Before running the tests for the first time, install the browser with `npx playwright install chromium`.
 
