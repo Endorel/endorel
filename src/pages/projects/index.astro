@@ -1,0 +1,99 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header/Header.astro';
+import Footer from '../../components/Footer/Footer.astro';
+import ProjectDates from '../../components/Project/ProjectDates.astro';
+import TechList from '../../components/Project/TechList.astro';
+import { SITE_TITLE } from '../../consts';
+import { getCollection } from 'astro:content';
+
+// Featured projects first, then newest first
+const projects = (await getCollection('projects')).sort(
+	(a, b) =>
+		Number(b.data.featured) - Number(a.data.featured) ||
+		b.data.startDate.valueOf() - a.data.startDate.valueOf(),
+);
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead
+			title={`Projects | ${SITE_TITLE}`}
+			description="Selected projects I have designed and built."
+		/>
+		<style>
+			main {
+				width: 960px;
+			}
+			ul {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+				gap: 2rem;
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}
+			.card {
+				display: flex;
+				flex-direction: column;
+				gap: 0.75em;
+				height: 100%;
+				padding: 1.25em;
+				border-radius: 12px;
+				background: white;
+				box-shadow: 0 2px 8px rgba(var(--black), 8%);
+				color: rgb(var(--gray-dark));
+				text-decoration: none;
+				transition: box-shadow 0.2s ease;
+			}
+			.card:hover {
+				box-shadow: var(--box-shadow);
+			}
+			.card img {
+				width: 100%;
+				height: auto;
+				border-radius: 8px;
+			}
+			.card h2 {
+				margin: 0;
+				font-size: 1.563em;
+				line-height: 1.1;
+			}
+			.card:hover h2 {
+				color: var(--accent);
+			}
+			.card p {
+				margin: 0;
+			}
+			.dates {
+				color: rgb(var(--gray));
+				font-size: 0.9em;
+			}
+		</style>
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>Projects</h1>
+			<ul>
+				{projects.map((project) => (
+					<li>
+						<a class="card" href={`/projects/${project.id}/`}>
+							{project.data.heroImage && (
+								<img width={720} height={360} src={project.data.heroImage} alt="" />
+							)}
+							<h2>{project.data.title}</h2>
+							<p class="dates">
+								<ProjectDates startDate={project.data.startDate} endDate={project.data.endDate} />
+							</p>
+							<p>{project.data.description}</p>
+							<TechList tech={project.data.tech} />
+						</a>
+					</li>
+				))}
+			</ul>
+		</main>
+		<Footer />
+	</body>
+</html>

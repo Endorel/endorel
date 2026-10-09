@@ -1,0 +1,17 @@
+---
+interface Props {
+	startDate: Date;
+	endDate?: Date;
+}
+
+const { startDate, endDate } = Astro.props;
+const start = startDate.getFullYear();
+const end = endDate?.getFullYear();
+---
+
+<span>
+	<time datetime={startDate.toISOString()}>{start}</time>
+	{end !== start && (
+		<> – {endDate ? <time datetime={endDate.toISOString()}>{end}</time> : 'present'}</>
+	)}
+</span>

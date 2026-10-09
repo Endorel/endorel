@@ -15,4 +15,22 @@ const blog = defineCollection({
 	}),
 });
 
-export const collections = { blog };
+const projects = defineCollection({
+	loader: glob({ base: './src/content/projects', pattern: '**/*.{md,mdx}' }),
+	schema: z.object({
+		title: z.string(),
+		description: z.string(),
+		startDate: z.coerce.date(),
+		// Omit for ongoing projects
+		endDate: z.coerce.date().optional(),
+		role: z.string().optional(),
+		tech: z.array(z.string()).default([]),
+		repoUrl: z.url().optional(),
+		liveUrl: z.url().optional(),
+		heroImage: z.string().optional(),
+		// Featured projects are listed first
+		featured: z.boolean().default(false),
+	}),
+});
+
+export const collections = { blog, projects };
