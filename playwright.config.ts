@@ -1,6 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const port = 4321;
+// Not 4321, so a running `astro dev` server is never reused by mistake
+const port = 4399;
 
 // Tests run against the production build served by `astro preview`,
 // so `dist/` must be built first (`npm test` does this).

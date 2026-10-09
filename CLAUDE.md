@@ -27,7 +27,7 @@ When Astro 7 detects it is being run by an AI agent (via the `am-i-vibing` packa
 
 - Manage a background server with `npx astro dev status|logs|stop` (or `npx astro preview status|logs|stop`). Stop it when done; otherwise it keeps holding port 4321.
 - `--ignore-lock` (e.g. `npm run preview -- --ignore-lock`) forces a one-off foreground server instead. Astro's `status`, `logs` and `stop` don't track it, so stop it like any other process.
-- Anything that supervises the server process needs the foreground form. That's why the Playwright `webServer` command in `playwright.config.ts` passes `--ignore-lock`: without it, Playwright sees the command exit and fails with "Process from config.webServer exited early", leaving an orphaned background preview server on port 4321.
+- Anything that supervises the server process needs the foreground form. That's why the Playwright `webServer` command in `playwright.config.ts` passes `--ignore-lock`: without it, Playwright sees the command exit and fails with "Process from config.webServer exited early", leaving an orphaned background preview server behind. The tests use port 4399, not 4321, because Playwright reuses an existing server on its port outside CI, and would otherwise test a running `astro dev` server instead of the build.
 
 CI (`.github/workflows/ci.yml`) runs `npm ci`, `lint`, `format:check`, `build` and the Playwright tests on Node 24 for every PR and push to `main`, so run those before pushing.
 
