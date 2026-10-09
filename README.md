@@ -37,6 +37,7 @@ The Playwright tests find every page through the generated sitemap, so new posts
 - internal links and images resolve
 - there are no [axe](https://github.com/dequelabs/axe-core) WCAG 2.2 AA accessibility violations
 - the RSS feed lists every post
+- OpenGraph link-preview tags match each page, and any preview image loads
 - unknown URLs return a 404 status with the custom 404 page
 
 Before running the tests for the first time, install the browser with `npx playwright install chromium`.
@@ -81,6 +82,10 @@ featured: true # optional; featured projects are listed first
 
 What the project was, what you did and what came of it.
 ```
+
+### Link preview image
+
+Links to the site show a preview card in LinkedIn, Slack, Teams, messaging apps and email clients, built from OpenGraph tags. Blog posts, projects and the about page use their `heroImage`. Other pages use `DEFAULT_SHARE_IMAGE` in [`src/consts.ts`](src/consts.ts). Add a 1200×630 image to `public/` and set it there, for example `{ src: '/share.jpg', alt: 'Hélène Francke, senior full-stack developer' }`.
 
 ## Credit
 
