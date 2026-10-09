@@ -1,68 +1,90 @@
-# Astro Starter Kit: Blog
+# endorel.se
+
+[![CI](https://github.com/Endorel/endorel/actions/workflows/ci.yml/badge.svg)](https://github.com/Endorel/endorel/actions/workflows/ci.yml)
+
+Source for [endorel.se](https://endorel.se), the portfolio and blog of Hélène Francke, senior full-stack developer.
+
+## Stack
+
+- **[Astro 7](https://astro.build) with static output.** A portfolio is mostly content, so every page is pre-rendered HTML with almost no client-side JavaScript. That keeps the site fast, easy for search engines to index, and cheap to host anywhere.
+- **Content collections.** Blog posts and projects are Markdown/MDX files with frontmatter validated by Zod schemas in [`src/content.config.ts`](src/content.config.ts). A missing field or malformed date fails the build, not the live site.
+- **Plain CSS in scoped `<style>` blocks.** Modern CSS covers nesting, custom properties and container queries, and Astro scopes component styles automatically, so there's no preprocessor. Shared design tokens are CSS custom properties in [`src/styles/global.css`](src/styles/global.css).
+- **TypeScript in strict mode**, checked by `astro check` as part of every build.
+
+## Development
+
+Requires Node 22.12 or later.
 
 ```sh
-npm create astro@latest -- --template blog
+npm install
+npm run dev       # dev server at http://localhost:4321
+npm run build     # type-check, then build to dist/
+npm run preview   # serve the built site locally
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/blog)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/blog)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/blog/devcontainer.json)
+## Quality checks
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+| Command          | What it does                                                      |
+| :--------------- | :---------------------------------------------------------------- |
+| `npm run lint`   | ESLint with the JavaScript, typescript-eslint and Astro rule sets |
+| `npm run format` | Format with Prettier (`format:check` only checks)                 |
+| `npm test`       | Build, then run the Playwright tests against the built site       |
 
-![blog](https://github.com/withastro/astro/assets/2244813/ff10799f-a816-4703-b967-c78997e8323d)
+The Playwright tests find every page through the generated sitemap, so new posts and projects are covered without writing new tests. They check that:
 
-Features:
+- every page renders with a title, a single `<h1>` and the correct canonical URL
+- navigation highlights the current section
+- internal links and images resolve
+- there are no [axe](https://github.com/dequelabs/axe-core) WCAG 2.2 AA accessibility violations
+- the RSS feed lists every post
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+Before running the tests for the first time, install the browser with `npx playwright install chromium`.
 
-## 🚀 Project Structure
+[CI](.github/workflows/ci.yml) runs lint, the format check, the build and the Playwright tests on every pull request and push to `main`. [Dependabot](.github/dependabot.yml) opens weekly dependency update PRs, which go through the same checks.
 
-Inside of your Astro project, you'll see the following folders and files:
+## Adding content
 
-```text
-├── public/
-├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+### Blog post
+
+Create a `.md` or `.mdx` file in `src/content/blog/`. The file name becomes the URL, so `my-post.md` is published at `/blog/my-post/`.
+
+```md
+---
+title: 'Post title'
+description: 'One-sentence summary, used in listings, meta tags and RSS'
+pubDate: '2026-10-09'
+updatedDate: '2026-10-10' # optional
+heroImage: '/my-image.jpg' # optional, from public/
+---
+
+Start body headings at `##`: the layout renders the title as the page's `<h1>`.
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+### Project
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Create a `.md` or `.mdx` file in `src/content/projects/`. It's published at `/projects/<file-name>/` and listed on `/projects`.
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+```md
+---
+title: 'Project name'
+description: 'One-sentence summary for the project card'
+startDate: '2025-03-01'
+endDate: '2025-09-30' # optional; leave out for ongoing projects
+role: 'Lead frontend developer' # optional
+tech: ['TypeScript', 'React'] # optional
+repoUrl: 'https://github.com/…' # optional
+liveUrl: 'https://…' # optional
+heroImage: '/my-project.jpg' # optional, from public/
+featured: true # optional; featured projects are listed first
+---
 
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+What the project was, what you did and what came of it.
+```
 
 ## Credit
 
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+Built from the [Astro blog starter](https://github.com/withastro/astro/tree/main/examples/blog), which is based on the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+
+## License
+
+[MIT](LICENSE)

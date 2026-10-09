@@ -1,2 +1,2 @@
-export const SITE_TITLE = 'Helene Francke | Frontend developer';
-export const SITE_DESCRIPTION = "Helene Francke's portfolio site";
+export const SITE_TITLE = 'Hélène Francke | Senior full-stack developer';
+export const SITE_DESCRIPTION = "Hélène Francke's portfolio site";
