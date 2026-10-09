@@ -19,7 +19,15 @@ Requires Node 22.12+. TypeScript is pinned to 6.x because `@astrojs/check` does 
 - `npm test` — builds the site, then runs the Playwright tests in `tests/` against `astro preview` (Chromium only; first run needs `npx playwright install chromium`)
 - `npx playwright test tests/smoke.spec.ts -g "nav marks"` — run one file or matching tests (needs an existing `dist/`)
 
-The tests read `dist/sitemap-0.xml` to discover every page, so new posts and projects are covered automatically. They check: each page renders with one `<h1>` and the right canonical URL; nav active state; project page content; RSS lists every post (`smoke.spec.ts`); internal links and images resolve (`links.spec.ts`); and no axe WCAG 2.2 AA violations (`a11y.spec.ts`). Blog post bodies must not contain a `# H1` because the layout already renders the title as `<h1>`. The Playwright `webServer` passes `--ignore-lock` to `astro preview`, because Astro 7 otherwise auto-backgrounds the preview server when run by an AI agent and Playwright sees it exit.
+The tests read `dist/sitemap-0.xml` to discover every page, so new posts and projects are covered automatically. They check: each page renders with one `<h1>` and the right canonical URL; nav active state; project page content; RSS lists every post (`smoke.spec.ts`); internal links and images resolve (`links.spec.ts`); and no axe WCAG 2.2 AA violations (`a11y.spec.ts`). Blog post bodies must not contain a `# H1` because the layout already renders the title as `<h1>`.
+
+### Astro dev/preview servers start in the background when run by an agent
+
+When Astro 7 detects it is being run by an AI agent (via the `am-i-vibing` package, e.g. inside Claude Code), `astro dev` and `astro preview` (and so `npm run dev` / `npm run preview`) do **not** stay in the foreground. They spawn a detached background server, print a one-line JSON message with its URL and pid, and exit with code 0. Logs are JSON too. People running the same commands in a normal terminal are unaffected.
+
+- Manage a background server with `npx astro dev status|logs|stop` (or `npx astro preview status|logs|stop`). Stop it when done; otherwise it keeps holding port 4321.
+- `--ignore-lock` (e.g. `npm run preview -- --ignore-lock`) forces a one-off foreground server instead. Astro's `status`, `logs` and `stop` don't track it, so stop it like any other process.
+- Anything that supervises the server process needs the foreground form. That's why the Playwright `webServer` command in `playwright.config.ts` passes `--ignore-lock`: without it, Playwright sees the command exit and fails with "Process from config.webServer exited early", leaving an orphaned background preview server on port 4321.
 
 CI (`.github/workflows/ci.yml`) runs `npm ci`, `lint`, `format:check`, `build` and the Playwright tests on Node 24 for every PR and push to `main`, so run those before pushing.
 
